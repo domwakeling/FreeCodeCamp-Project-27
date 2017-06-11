@@ -27,9 +27,9 @@ export default class Navbar extends React.Component {
                             className='menu-toggle-button'
                             onClick={this.clickHandler.bind(this)}
                             >
-                            <div className='icon-bar' />
-                            <div className='icon-bar' />
-                            <div className='icon-bar' />
+                            <div className='bar-icon' />
+                            <div className='bar-icon' />
+                            <div className='bar-icon' />
                         </button>
 
                         <div className='navbar-top-menu' id='navbar-top-menu'>

@@ -9,10 +9,17 @@ export default class Footer extends React.Component {
 
         return (
             <div className='footer'>
-                &copy; {yearRange} &nbsp;
-                <a href='mailto:info@domwakeling.com'>
-                    Dom Wakeling
-                </a>
+                    <div className='text-centre'>Powered by</div>
+                    <img
+                        className='yelp-logo'
+                        src='/images/Yelp_trademark_RGB_outline.png'
+                    />
+                    <div className='text-centre'>
+                        &copy; {yearRange} &nbsp;
+                        <a href='mailto:info@domwakeling.com'>
+                            Dom Wakeling
+                        </a>
+                    </div>
             </div>
         );
     }
