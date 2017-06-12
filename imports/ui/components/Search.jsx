@@ -16,12 +16,12 @@ export default class Search extends React.Component {
         const searchLocation = $('input[name=search]')[0].value;
         if (searchLocation === '') {
             Bert.alert({
-                    title: 'No name provided',
-                    type: 'danger',
-                    message: 'Please provide a location!',
-                    style: 'growl-top-right',
-                    icon: 'fa-warning'
-                });
+                title: 'No name provided',
+                type: 'danger',
+                message: 'Please provide a location!',
+                style: 'growl-top-right',
+                icon: 'fa-warning'
+            });
         } else {
             this.props.submitCallback(searchLocation);
         }

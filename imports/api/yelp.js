@@ -89,6 +89,23 @@ Meteor.methods({
             reject(response);
 
         });
+    },
+
+    'yelp.getBusinessInfo'(authToken, location) {
+
+        return new Promise(function(resolve, reject) {
+
+            // Construct the API URL
+            var apiUrl = 'https://api.yelp.com/v3/businesses/search';
+            apiUrl = apiUrl + '?term=bar';
+            apiUrl = apiUrl + '&location=' + location;
+
+            var response = Meteor.wrapAsync(apiCallGet)(apiUrl, authToken);
+            resolve(response);
+            // next line ONLY here to prevent a linting error
+            reject(response);
+
+        });
     }
 
 });

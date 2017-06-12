@@ -5,8 +5,9 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import Search from './components/Search.jsx';
 import { Session } from 'meteor/session';
+import { Bert } from 'meteor/themeteorchef:bert';
+import Bars from './components/Bars.jsx';
 // import { Votes } from '../api/votes.js';
-// import { Bert } from 'meteor/themeteorchef:bert';
 // import { _ } from 'underscore';
 
 // Main index page
@@ -16,6 +17,8 @@ class IndexPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            businesses: [],
+            mode: 'search',
             searchLocation: ''
         };
         this.handleLocationChange = this.handleLocationChange.bind(this);
@@ -31,13 +34,27 @@ class IndexPage extends React.Component {
     // Passed as callback to 'Search' component, activating a search
     async handleLocationSubmit(str) {
 
+        // use component var to bind 'this' for simplicity
+        var component = this;
+
         str = str.replace(/\s/g, '%20');
         this.promiseAuthToken().then( function(response) {
             Meteor.call('yelp.getLocalInfo', response, str, function(err, res) {
                 if (err) {
                     console.log('Error while asking for info', err);
+                } else if (res.businesses.length > 0) {
+                    component.setState({
+                        businesses: res.businesses,
+                        mode: 'bars'
+                    });
                 } else {
-                    console.log('Result:', res);
+                    Bert.alert({
+                        title: 'No results found',
+                        type: 'danger',
+                        message: 'Couldn\'t find any bars near you!',
+                        style: 'growl-top-right',
+                        icon: 'fa-warning'
+                    });
                 }
             });
         }, function(error) {
@@ -84,7 +101,7 @@ class IndexPage extends React.Component {
         });
     }
 
-
+    // Render search bar on screen
     renderSearch() {
         const searchLocation = this.state.searchLocation;
         return (
@@ -96,12 +113,20 @@ class IndexPage extends React.Component {
         );
     }
 
+    // Render bars on screen
+    renderBars() {
+        const businesses = this.state.businesses;
+        return (
+            <Bars businesses={businesses} />
+        );
+    }
+
     // Render main part of app; this calls helper functions which do the work
     render() {
-        // TODO: sort something out here!
+        const mode = this.state.mode;
         return (
             <Layout>
-                {this.renderSearch()}
+                {mode === 'search' ? this.renderSearch() : this.renderBars()}
             </Layout>
         );
     }

@@ -25,7 +25,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
 
-            background: $color__very-light-grey;
+            background: $color__project-inverse;
             &:focus {
                 background: white;
             }
@@ -57,8 +57,8 @@
         // style border and font
         border-radius: 3px 0 0 3px;
         @include font__font-awesome;
-        background: lighten($color__project-theme, 10%);
-        color: lighten($color__project-theme, 35%);
+        background: lighten($color__project-theme, 5%);
+        color: lighten($color__project-theme, 40%);
         content: "\f002";
     }
 
