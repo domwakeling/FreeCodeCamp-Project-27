@@ -1,7 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { createContainer } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
 
-export default class BarDetail extends React.Component {
+class BarDetail extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            going: 0,
+            userGoing: false
+        };
+    }
+
+    componentDidMount() {
+
+        var component = this;
+
+        Meteor.call('votes.howMany', this.props.businessId, function(err, res) {
+            if (err) {
+                component.setState({going: 0});
+            } else {
+                component.setState({going: res});
+            }
+        });
+    }
 
     imageForRating(rating) {
         switch (rating) {
@@ -30,17 +53,64 @@ export default class BarDetail extends React.Component {
         }
     }
 
+    goingClick() {
+        if (this.state.userGoing) {
+            Meteor.call('votes.removeOne',
+                this.props.businessId,
+                Meteor.userId()
+            );
+            const going = this.state.going - 1;
+            this.setState({going: going, userGoing: false});
+        } else {
+            Meteor.call('votes.addOne',
+                this.props.businessId,
+                Meteor.userId()
+            );
+            const going = this.state.going + 1;
+            this.setState({going: going, userGoing: true});
+        }
+    }
+
+    renderGoingButton() {
+        if (Meteor.user()) {
+            var text = this.state.userGoing ? 'Not going' : 'Sign me up!';
+            return (
+                <button className='main-button' onClick={this.boundGoingClick}>
+                    {text}
+                </button>
+            );
+        } else {
+            return '';
+        }
+    }
+
     render() {
+
+        this.boundGoingClick = this.goingClick.bind(this);
+
         const ratingUrl = this.imageForRating(this.props.rating);
-        const imageUrl = this.props.imageUrl !== '' ?
+
+        var imageUrl = this.props.imageUrl !== '' ?
             this.props.imageUrl :
             'http://via.placeholder.com/150x120/ddd/666?text=NO+IMAGE';
+
         return (
             <div className='bar-card'>
                 <h3>{this.props.businessName}</h3>
                 <img className='bar-image' src={imageUrl} />
                 <div className='clearfix' />
                 <img className='bar-rating' src={ratingUrl} />
+                <div className='clearfix' />
+                <div
+                    className='float-left cardbottom'
+                    >
+                    {this.state.going} going
+                </div>
+                <div
+                    className='float-right cardbottom'
+                    >
+                    {this.renderGoingButton()}
+                </div>
             </div>
         );
     }
@@ -54,3 +124,10 @@ BarDetail.propTypes = {
     linkUrl: PropTypes.string,
     rating: PropTypes.number
 };
+
+// Wrap the component in a createContainer component, so data can be rendered
+export default createContainer(() => {
+    return {
+        user: Meteor.user()
+    };
+}, BarDetail);

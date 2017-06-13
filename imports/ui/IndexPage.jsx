@@ -7,8 +7,6 @@ import Search from './components/Search.jsx';
 import { Session } from 'meteor/session';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Bars from './components/Bars.jsx';
-// import { Votes } from '../api/votes.js';
-// import { _ } from 'underscore';
 
 // Main index page
 class IndexPage extends React.Component {
@@ -43,8 +41,11 @@ class IndexPage extends React.Component {
                 if (err) {
                     console.log('Error while asking for info', err);
                 } else if (res.businesses.length > 0) {
+                    const sortedBusiness = res.businesses.sort((a, b) =>
+                        b.rating - a.rating
+                    );
                     component.setState({
-                        businesses: res.businesses,
+                        businesses: sortedBusiness,
                         mode: 'bars'
                     });
                 } else {
@@ -151,14 +152,12 @@ async function getNewAuthToken() {
 IndexPage.propTypes = {
     history: PropTypes.object,
     location: PropTypes.object,
-    // votes: PropTypes.array.isRequired,
     user: PropTypes.object
 };
 
 // Wrap the component in a createContainer component, so data can be rendered
 export default createContainer(() => {
     return {
-        // votes: Votes.find({}).fetch(),
         user: Meteor.user()
     };
 }, IndexPage);

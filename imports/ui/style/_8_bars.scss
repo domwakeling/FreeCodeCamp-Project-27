@@ -32,8 +32,10 @@
     color: $color__project-inverse;
 
     img.bar-image {
-        max-width: 150px;
-        max-height: 150px;
+        width: 150px;
+        height: 120px;
+        object-fit: cover;
+        margin-bottom: 0.5 * $structure__font-pad-horiz;
     }
 
     // img.bar-rating {
@@ -42,6 +44,20 @@
 
     h1,h2,h3,h4,h5,h6 {
         color: $color__project-inverse;
+    }
+
+    .cardbottom {
+        padding-bottom: $structure__font-pad-horiz;
+    }
+
+    .main-button {
+        background-color: $color__project-contrast;
+        &:hover {
+            background-color: lighten($color__project-contrast, 3%);
+        }
+        &:active {
+            background-color: darken($color__project-contrast, 3%);
+        }
     }
 
 }
