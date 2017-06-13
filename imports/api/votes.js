@@ -21,6 +21,15 @@ Meteor.methods({
         }
     },
 
+    'votes.isGoing'(businessId, userId) {
+        var result = Votes.findOne({businessId: businessId});
+        if (result && result.going) {
+            return result.going.indexOf(userId) >= 0;
+        } else {
+            return false;
+        }
+    },
+
     'votes.addOne'(businessId, userId) {
         Votes.update(
             {businessId: businessId},

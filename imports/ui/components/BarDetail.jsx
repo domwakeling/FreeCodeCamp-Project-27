@@ -24,6 +24,19 @@ class BarDetail extends React.Component {
                 component.setState({going: res});
             }
         });
+
+        if (Meteor.user() && Meteor.userId()) {
+            Meteor.call(
+                'votes.isGoing',
+                this.props.businessId,
+                Meteor.userId(),
+                function(err, res) {
+                    if (!err) {
+                        component.setState({userGoing: res});
+                    }
+                }
+            );
+        }
     }
 
     imageForRating(rating) {
